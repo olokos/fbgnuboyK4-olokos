@@ -136,13 +136,13 @@ void vid_init()
 	}
 	memset(fbdata, 0x00, finfo.line_length*vinfo.yres);
 
-	xoffs = (vinfo.xres - 160*2) / 2;
-	yoffs = (vinfo.yres - 144*2) / 2;
+	xoffs = (vinfo.xres - 240*2) / 2;
+	yoffs = (vinfo.yres - 216*2) / 2;
 
 	fb.ptr = fbtemp;
 	fb.yuv = 1;
-	fb.w = 160;
-	fb.h = 144;
+	fb.w = 240;
+	fb.h = 216;
 	fb.pelsize = 1; /* We always use 24bit color in 32bit uints */
 	fb.indexed = 0;
 	fb.cc[0].r = 0; /* R: 8bit @16 */
@@ -151,7 +151,7 @@ void vid_init()
 	fb.cc[1].l = 0;
 	fb.cc[2].r = 0; /* B: 8bit @0 */
 	fb.cc[2].l = 0;
-	fb.pitch = 160;
+	fb.pitch = 240;
 
     fb.enabled = 1;
     fb.dirty = 0;
@@ -188,7 +188,7 @@ void vid_end()
 	uint8_t *src;
 	uint8_t *dst_e;
 	uint8_t *dst_o;
-	int skip = finfo.line_length*2 - 160 * (vinfo.bits_per_pixel >> 2);
+	int skip = finfo.line_length*2 - 240 * (vinfo.bits_per_pixel >> 2);
 
 //	if(0 == c++ % 2) { /*frameskip*/
 		src = fbtemp;
@@ -196,8 +196,8 @@ void vid_end()
 			dst_e = fbdata + (xoffs >> 1) + yoffs * finfo.line_length;
 			dst_o = dst_e + finfo.line_length;
 
-			for(y = 0; y < 144; y++) {
-				for(x = 0; x < 160; x++) {
+			for(y = 0; y < 216; y++) {
+				for(x = 0; x < 240; x++) {
 					*dst_e = odither_e[*src];
 					*dst_o = odither_o[*src];
 					dst_e++;
@@ -211,8 +211,8 @@ void vid_end()
 			dst_e = fbdata + xoffs + yoffs * finfo.line_length;
 			dst_o = dst_e + finfo.line_length;
 
-			for(y = 0; y < 144; y++) {
-				for(x = 0; x < 160; x++) {
+			for(y = 0; y < 216; y++) {
+				for(x = 0; x < 240; x++) {
 					*dst_e = odither_e[*src] & 0xF0;
 					*dst_e = *dst_e | (*dst_e >> 4);
 					dst_e++;
@@ -233,9 +233,9 @@ void vid_end()
 		}
 		update_area_t myarea;
 		myarea.x1 = xoffs;
-		myarea.x2 = 320 + xoffs;
+		myarea.x2 = 480 + xoffs;
 		myarea.y1 = yoffs;
-		myarea.y2 = 288 + yoffs;
+		myarea.y2 = 432 + yoffs;
 		myarea.buffer = NULL;
 		myarea.which_fx = fx_update_partial;
 		ioctl(fd, FBIO_EINK_UPDATE_DISPLAY_AREA, &myarea);
