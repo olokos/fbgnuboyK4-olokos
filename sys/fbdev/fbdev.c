@@ -17,7 +17,7 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <linux/fb.h>
-#include <linux/einkfb.h>
+#include "einkfb.h"
 
 #include "fb.h"
 #include "input.h"
@@ -81,11 +81,11 @@ rcvar_t vid_exports[] =
 
 void vid_init()
 {
-	fbtemp = (uint8_t*) malloc(144*160);
-	if (!fbtemp) {
-		fprintf(stderr, "Error: can't claim shadow fb mem\n");
-		exit(1);
-	}
+    fbtemp = (uint8_t*) malloc(144 * 160);
+    if (!fbtemp) {
+        fprintf(stderr, "Error: can't claim shadow fb mem\n");
+        exit(1);
+    }
 
 	/* open framebuffer */
 	fd = open("/dev/fb0", O_RDWR);
@@ -109,10 +109,10 @@ void vid_init()
 		exit(1);
 	}
 
-	if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo)) {
-		perror("Error: get variable screen info");
-		exit(1);
-	}
+    if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo)) {
+        perror("Error: get variable screen info");
+        exit(1);
+    }
 
 	if (!vinfo.grayscale) {
 		fprintf(stderr, "Error: only grayscale is supported\n");
@@ -153,8 +153,8 @@ void vid_init()
 	fb.cc[2].l = 0;
 	fb.pitch = 160;
 
-	fb.enabled = 1;
-	fb.dirty = 0;
+    fb.enabled = 1;
+    fb.dirty = 0;
 
 	joy_init();
 }
